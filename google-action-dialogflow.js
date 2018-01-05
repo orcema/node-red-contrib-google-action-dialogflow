@@ -43,16 +43,16 @@ module.exports = function(RED) {
         node.key = n.key || '';
         node.cert = n.cert || '';
 
-        const options = {
-            key: fs.readFileSync(node.key),
-            cert: fs.readFileSync(node.cert)
-        };
+        // const options = {
+            // key: fs.readFileSync(node.key),
+            // cert: fs.readFileSync(node.cert)
+        // };
 
                 // Create new http server to listen for requests
         var expressApp = express();
         expressApp.use(bodyParser.json({ type: 'application/json' }));
-        node.httpServer = https.createServer(options, expressApp);
-
+        //node.httpServer = https.createServer(options, expressApp);
+		node.httpServer = http.createServer(expressApp);
         // Handler for requests
         expressApp.all(node.url, (request, response) => {
 
