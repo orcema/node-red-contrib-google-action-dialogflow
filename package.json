@@ -24,7 +24,7 @@
   "homepage": "https://github.com/tuxtof/node-red-contrib-google-action-dialogflow",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tuxtof/node-red-contrib-google-action-dialogflow.git"
+    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow.git"
   },
   "node-red": {
     "nodes": {
