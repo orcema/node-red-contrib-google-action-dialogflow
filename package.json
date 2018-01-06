@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-google-action-dialogflow",
+  "name": "node-red-contrib-google-action-dialogflow-HTTP",
   "version": "0.5.4",
   "description": "A node-red node for interfacing with actions from Google Assistant based on Dialogflow.",
   "dependencies": {
@@ -8,8 +8,8 @@
     "body-parser": "^1.18"
   },
   "author": {
-    "name": "tuxtof",
-    "email": "tuxtof@geo6.net"
+    "name": "orcema",
+    "email": "orce00@gmail.com"
   },
   "license": "MIT",
   "keywords": [
@@ -19,16 +19,16 @@
     "google"
   ],
   "bugs": {
-    "url": "https://github.com/tuxtof/node-red-contrib-google-action-dialogflow/issues"
+    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow/issues"
   },
-  "homepage": "https://github.com/tuxtof/node-red-contrib-google-action-dialogflow",
+  "homepage": "https://github.com/orcema/node-red-contrib-google-action-dialogflow",
   "repository": {
     "type": "git",
     "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow.git"
   },
   "node-red": {
     "nodes": {
-      "google-action-dialogflow": "google-action-dialogflow.js"
+      "google-action-dialogflow-HTTP": "google-action-dialogflow-HTTP.js"
     }
   }
 }
