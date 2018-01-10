@@ -1,9 +1,9 @@
 <!--
-node-red-contrib-google-action - A Node Red node to handle actions from Google Action
+node-red-contrib-google-action-http - A Node Red node to handle actions from Google Action
 
 MIT License
 
-Copyright (c) 2017 Dean Cording
+Copyright (c) 2017 Orce Marinkovski
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -12,7 +12,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<script type="text/x-red" data-template-name="google-action-dialogflow in">
+<script type="text/x-red" data-template-name="google-action-dialogflow-http in">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" >
@@ -29,17 +29,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <label for="node-input-url"><i class="fa fa-tag"></i> URL</span></label>
         <input id="node-input-url" type="text" placeholder="/">
     </div>
-    <div class="form-row">
-        <label for="node-input-key"><i class="fa fa-tag"></i> SSL Private Key File</span></label>
-        <input id="node-input-key" type="text" placeholder="/path/on/server/to/private.key">
-    </div>
-    <div class="form-row">
-        <label for="node-input-cert"><i class="fa fa-tag"></i> SSL Certificate File</span></label>
-        <input id="node-input-cert" type="text" placeholder="/path/on/server/to/certificate.crt">
-    </div>
+    <!-- <div class="form-row"> -->
+        <!-- <label for="node-input-key"><i class="fa fa-tag"></i> SSL Private Key File</span></label> -->
+        <!-- <input id="node-input-key" type="text" placeholder="/path/on/server/to/private.key"> -->
+    <!-- </div> -->
+    <!-- <div class="form-row"> -->
+        <!-- <label for="node-input-cert"><i class="fa fa-tag"></i> SSL Certificate File</span></label> -->
+        <!-- <input id="node-input-cert" type="text" placeholder="/path/on/server/to/certificate.crt"> -->
+    <!-- </div> -->
 </script>
 
-<script type="text/x-red" data-help-name="google-action-dialogflow in">
+<script type="text/x-red" data-help-name="google-action-dialogflow-http in">
     <p>Creates an end-point for receiving requests from Google Actions with Dialogflow enabled.</p>
     <h3>Outputs</h3>
     <dl class="message-properties">
@@ -69,7 +69,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
        must include an Google Action Response node to complete the request.</p>
 </script>
 
-<script type="text/x-red" data-template-name="google-action-dialogflow response">
+<script type="text/x-red" data-template-name="google-action-dialogflow-http response">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
@@ -77,7 +77,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <div class="form-tips">The messages sent to this node must originate from a Google Action input node.</span></div>
 </script>
 
-<script type="text/x-red" data-help-name="google-action-dialogflow response">
+<script type="text/x-red" data-help-name="google-action-dialogflow-http response">
     <p>Sends responses back to requests received from a Google Action input node.</p>
 
     <h3>Inputs</h3>
@@ -100,16 +100,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <script type="text/javascript">
 (function() {
-    RED.nodes.registerType('google-action-dialogflow in',{
+    RED.nodes.registerType('google-action-dialogflow-http in',{
         category: 'input',
-        color:"rgb(131, 231, 174)",
+        color:"rgb(231, 221, 54)",
         defaults: {
             name: {value:""},
             topic: {value:""},
-            port: {value:"8081",required:true},
-            url: {value:"/", required:true},
-            key: {value:"", requred:true},
-            cert: {value: "", required:true}
+            port: {value:"8089",required:true},
+            url: {value:"/", required:true}
+            <!-- key: {value:"", requred:true}, -->
+            <!-- cert: {value: "", required:true} -->
         },
         inputs:0,
         outputs:1,
@@ -126,9 +126,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         }
     });
 
-    RED.nodes.registerType('google-action-dialogflow response',{
+    RED.nodes.registerType('google-action-dialogflow-http response',{
         category: 'output',
-        color:"rgb(131, 231, 174)",
+        color:"rgb(231, 221, 54)",
         defaults: {
             name: {value:""}
         },

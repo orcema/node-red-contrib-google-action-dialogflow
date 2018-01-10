@@ -1,4 +1,63 @@
-# node-red-contrib-google-actionflow
+# node-red-contrib-google-actionflow-http
+
+This is a fork from the [node-red-contrib-google-actionflow]. The main difference is that this node works with a non secured http web server.
+
+To use this node you must run a [central https server], and in my case i use a [nginx] as a server. 
+The main advantage running this mode is to have a central gateway for each https request entering your private network !!
+
+Here a configuration sample file for running the nginx https server:
+
+			server {
+				listen 80;
+				server_name [url sever];
+
+				location / {
+				rewrite ^(.*) https://[url sever] permanent;
+				}   
+			}
+
+
+			#--------------------------------------
+			# HTTPS server listening on port 443
+			#----------------------------------------
+			server {
+				listen 443 ssl;
+				server_name [url sever];
+
+				# Enable HSTS
+				add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
+				# Do not allow this site to be displayed in iframes
+				add_header X-Frame-Options DENY;
+
+				# Do not permit Content-Type sniffing.
+				add_header X-Content-Type-Options nosniff;
+
+				keepalive_timeout 70;
+
+
+					root [path to webserver folder];
+					index index.php index.html index.htm;
+
+					ssl on;
+					ssl_certificate [path to .pem certificate file];
+					ssl_certificate_key [path to .pem privatekey file];
+					ssl_dhparam [path to .pem dhparam file];
+					ssl_session_cache shared:SSL:10m;
+					ssl_session_timeout 5m;
+					ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+					ssl_ciphers HIGH:!aNULL:!MD5; 
+					ssl_prefer_server_ciphers on;
+
+
+				location / {
+					proxy_pass    http://[ip address of node-red-contrib-google-actionflow-http]:8089/;
+				}
+			}
+
+Here is a link to a good tutorial for setup of a HTTPS Webserver using a RPI http://web-privacy-security.blogspot.lu/2018/01/setting-up-reasonably-secure-home-web.html			
+
+
 Node Red nodes to receive and respond to Google Action requests from Google Assistant based on actionflow.
 
 Google Assistant is Google's personal assistant that provides the voice recognition and natural language processing behind Google's Android and Home devices.  Google Actions allow you to build conversational agents that interact with the user using a query-response conversation style.

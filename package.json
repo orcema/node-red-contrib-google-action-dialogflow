@@ -1,34 +1,52 @@
 {
-  "name": "node-red-contrib-google-action-dialogflow-HTTP",
-  "version": "0.5.4",
-  "description": "A node-red node for interfacing with actions from Google Assistant based on Dialogflow.",
+  "_from": "node-red-contrib-google-action-dialogflow-http@0.5.5",
+  "_id": "node-red-contrib-google-action-dialogflow-http@0.5.5",
+  "_inBundle": false,
+  "_integrity": "sha512-X87t3afw3GLwlGdOVHWsUL9GhynuWbyxv1R8hctRJjzNeUu0lRRvroJnifBYnoEggBbiuY9stcW8c+dPlGinTw==",
+  "_location": "/node-red-contrib-google-action-dialogflow-http",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "node-red-contrib-google-action-dialogflow-http@0.5.5",
+    "name": "node-red-contrib-google-action-dialogflow-http",
+    "escapedName": "node-red-contrib-google-action-dialogflow-http",
+    "rawSpec": "0.5.5",
+    "saveSpec": null,
+    "fetchSpec": "0.5.5"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "bugs": {
+    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow/issues"
+  },
+  "bundleDependencies": false,
   "dependencies": {
     "actions-on-google": "1.6.*",
-    "express": "^4.16",
-    "body-parser": "^1.18"
+    "body-parser": "^1.18",
+    "express": "^4.16"
   },
-  "author": {
-    "name": "orcema",
-    "email": "orce00@gmail.com"
-  },
-  "license": "MIT",
+  "deprecated": false,
+  "description": "A node-red node for interfacing with actions from Google Assistant based on Dialogflow.",
+  "homepage": "https://github.com/orcema/node-red-contrib-google-action-dialogflow",
   "keywords": [
     "node-red",
     "android",
     "iot",
     "google"
   ],
-  "bugs": {
-    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow/issues"
-  },
-  "homepage": "https://github.com/orcema/node-red-contrib-google-action-dialogflow",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow.git"
-  },
+  "license": "MIT",
+  "name": "node-red-contrib-google-action-dialogflow-http",
   "node-red": {
     "nodes": {
-      "google-action-dialogflow-HTTP": "google-action-dialogflow-HTTP.js"
+      "google-action-dialogflow-http": "google-action-dialogflow-http.js"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orcema/node-red-contrib-google-action-dialogflow.git"
+  },
+  "version": "0.5.5"
 }

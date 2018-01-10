@@ -4,7 +4,7 @@ node-red-contrib-google-actionflow - A Node Red node to handle actions from Goog
 
 MIT License
 
-Copyright (c) 2017 Dean Cording
+Copyright (c) 2017 Orce Marinkovski
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -34,7 +34,7 @@ module.exports = function(RED) {
 
     var appMap = new Map();
 
-    function GoogleActionDialogflowIn(n) {
+    function GoogleActionDialogflowIn_http(n) {
         RED.nodes.createNode(this,n);
 
         var node = this;
@@ -99,10 +99,10 @@ module.exports = function(RED) {
         });
 
     }
-    RED.nodes.registerType("google-action-dialogflow in",GoogleActionDialogflowIn);
+    RED.nodes.registerType("google-action-dialogflow-http in",GoogleActionDialogflowIn_http);
 
 
-    function GoogleActionDialogflowOut(n) {
+    function GoogleActionDialogflowOut_http(n) {
         RED.nodes.createNode(this,n);
         var node = this;
 
@@ -122,5 +122,5 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("google-action-dialogflow response",GoogleActionDialogflowOut);
+    RED.nodes.registerType("google-action-dialogflow-http response",GoogleActionDialogflowOut_http);
 }
