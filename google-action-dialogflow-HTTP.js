@@ -62,7 +62,6 @@ module.exports = function(RED) {
             app.handleRequest(function() {
 
                 appMap.set(app.getUser().userId, app);
-
                 var msg = {topic: node.topic,
                             conversationId: app.getUser().userId,
                             intent: app.getIntent(),
@@ -70,6 +69,10 @@ module.exports = function(RED) {
                             context: app.getContexts(),
                             // dialogState: app.getDialogState(),
                             closeConversation: true,
+                            body_: app.body_,
+                            data : app.data,
+                            Context_Out : {name:"",lifespan:100,parameters:""},
+                            Context_Out_Reprompts:[]
                         };
 
                 switch(msg.intent) {
@@ -107,9 +110,20 @@ module.exports = function(RED) {
         var node = this;
 
         this.on("input",function(msg) {
+            
+
 
             var app = appMap.get(msg.conversationId);
-
+            
+            /*set the output context if name is defined*/
+            if(msg.Context_Out.name!==""){
+                app.setContext(msg.Context_Out.name,msg.Context_Out.lifespan,msg.Context_Out.parameters);
+            }
+            /*set the reprompts if if set*/
+            console.log(msg.Context_Out_Reprompts.length);
+            if(msg.Context_Out_Reprompts.length>0){
+                msg.dialogState=msg.Context_Out_Reprompts;
+            }
             if (app) {
                 if (msg.closeConversation) {
                     app.tell(msg.payload.toString());

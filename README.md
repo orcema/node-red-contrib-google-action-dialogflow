@@ -1,5 +1,3 @@
-# node-red-contrib-google-actionflow-http
-
 This is a fork from the [node-red-contrib-google-actionflow]. The main difference is that this node works with a non secured http web server.
 
 To use this node you must run a [central https server], and in my case i use a [nginx] as a server. 
@@ -79,3 +77,20 @@ To deploy your app, you will need an account on [Google Actions](https://develop
 Be aware that Google Assistant isn't really intended to run private apps.  It is possible to have a private app by keeping your app in test mode perpetually.  One of the difficulties though is that Google requires your app to have a unique name from any other app published by anyone else and you can't use any registered brand name.
 
 Also be aware that there is no security mechanism in this implementation yet.  Google uses [OAuth2.0](https://developers.google.com/actions/identity/oauth2-code-flow) to authorise users to access your end point.  It will be added in a future release (or send me a pull request :-).
+
+Update Log:
+
+Version 0.5.5:
+ - now it's possible to add a context to a response(question to the user). The output context variable is predefined at "msg" level like 
+   Context_Out : {name:"",lifespan:100,parameters:""} as default parameters.
+   If the name is "" then no output context will be set.
+ 
+ - When asking the user for further details you were able to do this by setting the flag "closeConversation" to true (This flag is at "msg" level.). So you were able to ask
+   the user for further details but without the possibility to define a re-prompt. This is mandatory when asking the user for more details to avoid leaving the mic open without the user awareness. You can add up to 3 re-prompts like this: 
+			
+			msg.Context_Out_Reprompts[0]="Can you repeat?"
+		or 
+			msg.Context_Out_Reprompts=["Can you please repeat?","How please ?","What did you say?"]
+ 
+ 
+# node-red-contrib-google-actionflow-http
