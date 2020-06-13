@@ -1,2 +1,2 @@
-rd /S/Q C:\Users\orce\.node-red\node_modules\node-red-contrib-google-action-dialogflow
-mklink /J C:\Users\orce\.node-red\node_modules\node-red-contrib-google-action-dialogflow D:\DefaultInstall\UserData\nodejs\node-red-custom-nodes\node-red-contrib-google-action-dialogflow
+rd /S/Q C:\Users\orce\.node-red\node_modules\node-red-contrib-google-action-dialogflow-http
+mklink /J C:\Users\orce\.node-red\node_modules\node-red-contrib-google-action-dialogflow-http D:\DefaultInstall\UserData\nodejs\node-red-custom-nodes\node-red-contrib-google-action-dialogflow-http
