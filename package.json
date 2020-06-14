@@ -24,7 +24,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "actions-on-google": "1.6.*",
+    "actions-on-google": "^2.12.0",
     "body-parser": "^1.18",
     "express": "^4.16"
   },

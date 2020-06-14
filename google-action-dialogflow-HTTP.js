@@ -18,25 +18,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 module.exports = function(RED) {
     "use strict";
 
-
-    const DialogflowApp = require('actions-on-google').DialogflowApp;
-
     const express = require('express');
-    //const https = require("https");
 	const http = require("http");
     const fs = require('fs');
-
-
     const bodyParser = require('body-parser');
-
-    // Map of app handlers
-    // DialogflowApp can't be cloned so we need to keep a central copy.
-
-    var appMap = new Map();
-
+    const {
+        dialogflow,
+        Image,
+      } = require('actions-on-google');
+    
+    
     function GoogleActionDialogflowIn_http(n) {
         RED.nodes.createNode(this,n);
-
         var node = this;
 
         node.url = n.url || '/';
@@ -44,53 +37,29 @@ module.exports = function(RED) {
         node.key = n.key || '';
         node.cert = n.cert || '';
 
-        // const options = {
-            // key: fs.readFileSync(node.key),
-            // cert: fs.readFileSync(node.cert)
-        // };
-
-                // Create new http server to listen for requests
+        // Create new http server to listen for requests
         var expressApp = express();
         expressApp.use(bodyParser.json({ type: 'application/json' }));
-        //node.httpServer = https.createServer(options, expressApp);
-		node.httpServer = http.createServer(expressApp);
-        // Handler for requests
-        expressApp.all(node.url, (request, response) => {
 
-            var app = new DialogflowApp({ request, response });
+        // Create an app instance
+        var app = dialogflow({debug: true});
 
-            app.handleRequest(function() {
-
-                appMap.set(app.getUser().userId, app);
-                var msg = {topic: node.topic,
-                            conversationId: app.getUser().userId,
-                            intent: app.getIntent(),
-                            userId: app.getUser().userId,
-                            context: app.getContexts(),
-                            // dialogState: app.getDialogState(),
-                            closeConversation: true,
-                            body_: app.body_,
-                            data : app.data,
-                            Context_Out : {name:"",lifespan:100,parameters:""},
-                            Context_Out_Reprompts:[]
-                        };
-
-                switch(msg.intent) {
-                    case 'actions.intent.OPTION':
-                        msg.payload = app.getSelectedOption();
-                        break;
-                    default:
-                        msg.payload = app.getRawInput();
-                }
-
-
+        app.fallback((conv, { devices, status }) => {
+            console.log(conv)
+            var msg = {};
+            msg.conv = conv;
+            return new Promise((resolve, reject) => { 
+                msg.resolve=resolve;
+                msg.responseType="respond";
+                msg.payload="";
                 node.send(msg);
-
-                node.trace("request: " + msg.payload);
-
             });
+
         });
 
+        expressApp.use(app);
+
+        node.httpServer = http.createServer(expressApp);
         // Start listening
         node.httpServer.listen(node.port);
 
@@ -110,30 +79,39 @@ module.exports = function(RED) {
         var node = this;
 
         this.on("input",function(msg) {
-            
 
+            switch(msg.responseType){
+                case 'respond':
+                    msg.conv.close(msg.payload);
+                    break;
 
-            var app = appMap.get(msg.conversationId);
+                case 'ask':
+                    msg.conv.ask(msg.payload);
+                    break;
+            }
+            msg.resolve();
+
+            // var app = appMap.get(msg.conversationId);
             
-            /*set the output context if name is defined*/
-            if(msg.Context_Out.name!==""){
-                app.setContext(msg.Context_Out.name,msg.Context_Out.lifespan,msg.Context_Out.parameters);
-            }
-            /*set the reprompts if if set*/
-            console.log(msg.Context_Out_Reprompts.length);
-            if(msg.Context_Out_Reprompts.length>0){
-                msg.dialogState=msg.Context_Out_Reprompts;
-            }
-            if (app) {
-                if (msg.closeConversation) {
-                    app.tell(msg.payload.toString());
-                    appMap.delete(msg.conversationId);
-                } else {
-                    app.ask(msg.payload.toString(), msg.dialogState);
-                }
-            } else {
-                node.warn("Invalid conversation id");
-            }
+            // /*set the output context if name is defined*/
+            // if(msg.Context_Out.name!==""){
+            //     app.setContext(msg.Context_Out.name,msg.Context_Out.lifespan,msg.Context_Out.parameters);
+            // }
+            // /*set the reprompts if if set*/
+            // //console.log(msg.Context_Out_Reprompts.length);
+            // if(msg.Context_Out_Reprompts.length>0){
+            //     msg.dialogState=msg.Context_Out_Reprompts;
+            // }
+            // if (app) {
+            //     if (msg.closeConversation) {
+            //         app.tell(msg.payload.toString());
+            //         appMap.delete(msg.conversationId);
+            //     } else {
+            //         app.ask(msg.payload.toString(), msg.dialogState);
+            //     }
+            // } else {
+            //     node.warn("Invalid conversation id");
+            // }
         });
     }
     RED.nodes.registerType("google-action-dialogflow-http response",GoogleActionDialogflowOut_http);
