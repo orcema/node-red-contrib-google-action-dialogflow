@@ -26,49 +26,72 @@ module.exports = function(RED) {
         dialogflow,
         Image,
       } = require('actions-on-google');
+    var inputNodes=[];
+    var httpServer=null;
     
-    
-    function GoogleActionDialogflowIn_http(n) {
-        RED.nodes.createNode(this,n);
-        var node = this;
 
-        node.url = n.url || '/';
-        node.port = n.port || 8089;
-        node.key = n.key || '';
-        node.cert = n.cert || '';
-
-        // Create new http server to listen for requests
+    function setupExpressApp() {
         var expressApp = express();
         expressApp.use(bodyParser.json({ type: 'application/json' }));
 
         // Create an app instance
-        var app = dialogflow({debug: true});
+        var app = dialogflow({ debug: true });
 
         app.fallback((conv, { devices, status }) => {
-            console.log(conv)
+            console.log(conv);
             var msg = {};
             msg.conv = conv;
-            return new Promise((resolve, reject) => { 
-                msg.resolve=resolve;
-                msg.responseType="respond";
-                msg.payload="";
-                node.send(msg);
+            return new Promise((resolve, reject) => {
+                inputNodes.forEach(node => {
+                    if (conv.intent===node.intent){
+                        msg.resolve = resolve;
+                        msg.responseType = "respond";
+                        msg.payload = "";
+                        node.send(msg);
+                    }
+                })
+
             });
 
         });
 
         expressApp.use(app);
+        return expressApp;
+    }
+    
+    
+    function DialogFlowListenerConfig(n){
+        RED.nodes.createNode(this,n);
+        var node = this;
+        inputNodes=[];
+        this.name = n.name;
+        this.port = n.port;
 
-        node.httpServer = http.createServer(expressApp);
-        // Start listening
-        node.httpServer.listen(node.port);
+        if(null==httpServer){
+            var expressApp = setupExpressApp();
+            httpServer = http.createServer(expressApp);
+            httpServer.listen(this.port);
 
-        // Stop listening
-        node.on('close', function(done) {
-            node.httpServer.close(function(){
-                done();
-            });
-        });
+        }else{
+            httpServer.close(function(){
+                var expressApp = setupExpressApp();
+                httpServer = http.createServer(expressApp);
+                httpServer.listen(this.port);
+            }.bind(this));
+        }
+     
+
+    }
+    RED.nodes.registerType("dialog-flow-listener-config",DialogFlowListenerConfig);
+
+    function GoogleActionDialogflowIn_http(n) {
+        RED.nodes.createNode(this,n);
+        this.intent=n.intent;
+        inputNodes.push(this);
+
+        //Validate config node
+         var config = RED.nodes.getNode(n.listener);
+
 
     }
     RED.nodes.registerType("google-action-dialogflow-http in",GoogleActionDialogflowIn_http);

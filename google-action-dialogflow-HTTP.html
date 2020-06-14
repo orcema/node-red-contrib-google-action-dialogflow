@@ -14,24 +14,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <script type="text/x-red" data-template-name="google-action-dialogflow-http in">
     <div class="form-row">
-        <label for="node-input-server"> Dialogflow Server</label>
-        <input type="text" id="node-input-server">
+        <label for="node-input-listener">Dialogflow Listener</label>
+        <input type="text" id="node-input-listener">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Names</label>
-        <input type="text" id="node-input-name" >
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tag"></i> Topic</label>
-        <input type="text" id="node-input-topic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-port"><i class="fa fa-plug"></i> Port</span></label>
-        <input id="node-input-port" type="text" placeholder="1089">
-    </div>
-    <div class="form-row">
-        <label for="node-input-url"><i class="fa fa-tag"></i> URL</span></label>
-        <input id="node-input-url" type="text" placeholder="/">
+        <label for="node-input-intent"><i class="fa fa-tag"></i>Intent</label>
+        <input type="text" id="node-input-intent">
     </div>
 </script>
 
@@ -71,11 +59,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           category: 'input',
           color:"rgb(231, 221, 54)",
           defaults: {
-              server:{value:"",type:"google-config-action-dialogflow-http"},
-              name: {value:""},
-              topic: {value:""},
-              port: {value:"8089",required:true},
-              url: {value:"/", required:true}
+              listener:{
+                value:"",
+                type:"dialog-flow-listener-config"},
+              intent: {value:""},
+
           },
           inputs:0,
           outputs:1,
@@ -152,100 +140,27 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
 
   
-  <script type="text/x-red" data-template-name="google-config-action-dialogflow-http">
+  <script type="text/x-red" data-template-name="dialog-flow-listener-config">
     <div class="form-row">
-      <label for="node-config-input-ipaddress"><i class="icon-bookmark"></i> IP Adress</label>
-      <input type="text" id="node-config-input-ipaddress" style="width:60%;" placeholder="192.168.xxx.xxx"/>
-      <a id="node-config-lookup-ipaddress" class="btn"><i id="node-config-lookup-ipaddress-icon" class="fa fa-search"></i></a>
+      <label for="node-config-input-name">Listener Name</label>
+      <input type="text" id="node-config-input-name" placeholder="name for the listener"/>
     </div>
     <div class="form-row">
-      <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
-      <input type="text" id="node-config-input-name" style="width:60%;" placeholder="Google Home Mini"/>
+      <label for="node-config-input-port">Port</label>
+      <input type="text" id="node-config-input-port" placeholder="8090"/>
     </div>
-    <div class="form-row">
-      <label for="node-input-language"><i class="fa fa-globe"></i>  Language</label>
-      <select id="node-input-language" style="width:60%;">
-            <option value="en"> English</option>
-        </select>
-    </div>
-    <div class="form-row">
-      <label for="node-input-language" style="width:40%;"><i class="fa fa-volume-up" ></i> Default notification level (%)</label>
-      <input type="text" id="node-config-input-notificationLevel" style="width:10%;" placeholder="50"/>
-      <label for="node-config-input-name" ><i class="icon-tag"></i> Overridable</label>
-      <input type="checkbox" checked data-toggle="toggle" class="red-ui-tab-link-button">
-    </div>
-    <div class="form-row">
-      <label for="node-input-language"><i class="fa fa-volume-up"></i> <span data-i18n="node-red:tcpin.label.type">Default notification level (%)</span></label>
-      <select id="node-input-language" style="width:120px; margin-right:5px;">
-          <option value="server" data-i18n="node-red:tcpin.type.listen">Listen on</option>
-          <option value="client" data-i18n="node-red:tcpin.type.connect">Connect to</option>
-      </select>
-      <span data-i18n="node-red:tcpin.label.port">port</span> <input type="text" id="node-input-port" style="width:65px" autocomplete="disable" dir="" class="input-error">
-  </div> 
   </script>
 
   <script type="text/javascript">
-    RED.nodes.registerType('google-config-action-dialogflow-http', {
+    RED.nodes.registerType('dialog-flow-listener-config', {
       category: 'config',
       defaults: {
-        ipaddress: {
-          value: "",
-          required: true
-        },
-        name: {
-          value: ""
-        },
-        language: {
-          value: "en"
-        },
-        notificationLevel:{
-          value: 50
-        }
+        name: {value:"",required:true},
+        port: {value:"1089",required:true}
       },
       label: function () {
-        return this.name || this.ipaddress;
+        return this.name || this.port;
       },
-      oneditprepare: function () {
-        var node = this;
-        var options = $("#node-input-language");
-  
-        //Calling the API built by NodeJS code
-        $.getJSON('/languages', function (languages) {
-          $.each(languages, function (l, language) {
-            options.append($("<option />").val(language.key).text(language.value));
-            options.val(node.language);
-          });
-        });
-  
-        try {
-          $("#node-config-input-ipaddress").autocomplete( "destroy" );
-        } catch(err) { }
-        $("#node-config-lookup-ipaddress").click(function() {
-            $("#node-config-lookup-ipaddress-icon").removeClass('fa-search');
-            $("#node-config-lookup-ipaddress-icon").addClass('spinner');
-            $("#node-config-lookup-ipaddress").addClass('disabled');
-            $.getJSON('ipaddresses',function(data) {
-                $("#node-config-lookup-ipaddress-icon").addClass('fa-search');
-                $("#node-config-lookup-ipaddress-icon").removeClass('spinner');
-                $("#node-config-lookup-ipaddress").removeClass('disabled');
-                var ipaddresses = [];
-                $.each(data, function(i, ip){
-                    ipaddresses.push(ip);
-                });
-                $("#node-config-input-ipaddress").autocomplete({
-                    source:ipaddresses,
-                    minLength:0,
-                    close: function( event, ui ) {
-                        $("#node-config-input-ipaddress").autocomplete( "destroy" );
-                    }
-                }).autocomplete("search","");
-            });
-        });
-  
-      },
-      oneditsave: function () {
-        var node = this;
-        node.language = $("#node-input-language").val();
-      }
+
     });
   </script>
