@@ -91,27 +91,6 @@ module.exports = function(RED) {
             }
             msg.resolve();
 
-            // var app = appMap.get(msg.conversationId);
-            
-            // /*set the output context if name is defined*/
-            // if(msg.Context_Out.name!==""){
-            //     app.setContext(msg.Context_Out.name,msg.Context_Out.lifespan,msg.Context_Out.parameters);
-            // }
-            // /*set the reprompts if if set*/
-            // //console.log(msg.Context_Out_Reprompts.length);
-            // if(msg.Context_Out_Reprompts.length>0){
-            //     msg.dialogState=msg.Context_Out_Reprompts;
-            // }
-            // if (app) {
-            //     if (msg.closeConversation) {
-            //         app.tell(msg.payload.toString());
-            //         appMap.delete(msg.conversationId);
-            //     } else {
-            //         app.ask(msg.payload.toString(), msg.dialogState);
-            //     }
-            // } else {
-            //     node.warn("Invalid conversation id");
-            // }
         });
     }
     RED.nodes.registerType("google-action-dialogflow-http response",GoogleActionDialogflowOut_http);
