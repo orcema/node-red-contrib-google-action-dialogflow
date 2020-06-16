@@ -69,10 +69,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           outputs:1,
           icon: "bridge.png",
           label: function() {
-              if (this.name) {
-                  return this.name;
+              if (this.intent) {
+                  return this.intent;
               } else {
-                  return "Action";
+                  return "Default Intent";
               }
           },
           labelStyle: function() {
