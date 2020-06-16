@@ -1,43 +1,4 @@
 {
-  "_from": "node-red-contrib-google-action-dialogflow-http@0.5.6",
-  "_id": "node-red-contrib-google-action-dialogflow-http@0.5.6",
-  "_inBundle": false,
-  "_integrity": "sha512-X87t3afw3GLwlGdOVHWsUL9GhynuWbyxv1R8hctRJjzNeUu0lRRvroJnifBYnoEggBbiuY9stcW8c+dPlGinTw==",
-  "_location": "/node-red-contrib-google-action-dialogflow-http",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "node-red-contrib-google-action-dialogflow-http@0.5.6",
-    "name": "node-red-contrib-google-action-dialogflow-http",
-    "escapedName": "node-red-contrib-google-action-dialogflow-http",
-    "rawSpec": "0.5.6",
-    "saveSpec": null,
-    "fetchSpec": "0.5.6"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "bugs": {
-    "url": "https://github.com/orcema/node-red-contrib-google-action-dialogflow/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "actions-on-google": "^2.12.0",
-    "body-parser": "^1.18",
-    "express": "^4.16"
-  },
-  "deprecated": false,
-  "description": "A node-red node for interfacing with actions from Google Assistant based on Dialogflow.",
-  "homepage": "https://github.com/orcema/node-red-contrib-google-action-dialogflow",
-  "keywords": [
-    "node-red",
-    "android",
-    "iot",
-    "google"
-  ],
-  "license": "MIT",
   "name": "node-red-contrib-google-action-dialogflow-http",
   "node-red": {
     "nodes": {
@@ -48,5 +9,19 @@
     "type": "git",
     "url": "git+https://github.com/orcema/node-red-contrib-google-action-dialogflow.git"
   },
-  "version": "0.5.6"
+  "version": "0.6.0",
+  "dependencies": {
+    "actions-on-google": "^2.12.0",
+    "body-parser": "^1.18",
+    "express": "^4.16"
+  },
+  "description": "A node-red node for interfacing with actions from Google Assistant based on Dialogflow.",
+  "homepage": "https://github.com/orcema/node-red-contrib-google-action-dialogflow",
+  "keywords": [
+    "node-red",
+    "android",
+    "iot",
+    "google"
+  ],
+  "license": "MIT"
 }

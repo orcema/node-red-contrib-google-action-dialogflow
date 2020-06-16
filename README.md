@@ -1,3 +1,8 @@
+version:0.6.0
+	- dependency update "actions-on-google": "^2.12.0"
+	- update intent filter within input node
+
+version 0.5.6:
 This is a fork from the [node-red-contrib-google-actionflow]. The main difference is that this node works with a non secured http web server.
 
 To use this node you must run a [central https server], and in my case i use a [nginx] as a server. 
