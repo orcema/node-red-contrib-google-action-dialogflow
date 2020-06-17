@@ -1,3 +1,6 @@
+version:0.6.1
+	fix: filenames
+	
 version:0.6.0
 	- dependency update "actions-on-google": "^2.12.0"
 	- update intent filter within input node
