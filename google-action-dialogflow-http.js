@@ -20,62 +20,73 @@ module.exports = function(RED) {
 
     const express = require('express');
 	const http = require("http");
-    const fs = require('fs');
     const bodyParser = require('body-parser');
     const {
         dialogflow,
         Image,
       } = require('actions-on-google');
-    var inputNodes=[];
+    var outputNodes=[];
     var httpServer=null;
     
+    const InputNodeHasProcessed = (conv) => {
+        return new Promise((resolve,reject)=>{
+            let msg={};
+            msg.responseType = "respond";
+            const matchedNode = outputNodes.filter(oN => oN.intent===conv.intent);
+            if (!matchedNode.length){
+                msg.payload=`L'intent [${conv.intent}] n'est pas pris en charge`;
+                resolve(msg);
+            }else{
+                msg.payload = "";
+                msg.conv=conv;
+                msg.resolve=resolve;
+                matchedNode[0].send(msg);
+            }
 
-    function setupExpressApp() {
-        var expressApp = express();
-        expressApp.use(bodyParser.json({ type: 'application/json' }));
+        })
+    };
 
-        // Create an app instance
-        var app = dialogflow({ debug: true });
+    // setup DialogFlow app
+    const appDialogflow = dialogflow({ debug: true });
+        appDialogflow.fallback(async(conv, params,userRequest) => {
+            const msgFromInputNode = await InputNodeHasProcessed(conv);
+            switch(msgFromInputNode.responseType){
+                case 'respond':
+                    conv.close(msgFromInputNode.payload);
+                    break;
 
-        app.fallback((conv, { devices, status }) => {
-            console.log(conv);
-            var msg = {};
-            msg.conv = conv;
-            return new Promise((resolve, reject) => {
-                inputNodes.forEach(node => {
-                    if (conv.intent===node.intent){
-                        msg.resolve = resolve;
-                        msg.responseType = "respond";
-                        msg.payload = "";
-                        node.send(msg);
-                    }
-                })
-
-            });
+                case 'ask':
+                    conv.ask(msgFromInputNode.payload);
+                    break;
+            }
 
         });
+        appDialogflow.catch((conv, error) => {
+            console.error(error);
+            conv.ask('I encountered a glitch. Can you say that again?');
+        });
 
-        expressApp.use(app);
-        return expressApp;
-    }
-    
-    
+    // setup express
+    const appExpress = express();
+        appExpress.use(bodyParser.json({ type: 'application/json' }));
+        appExpress.use(appDialogflow);
+
+ 
+       
     function DialogFlowListenerConfig(n){
         RED.nodes.createNode(this,n);
         var node = this;
-        inputNodes=[];
+        outputNodes=[];
         this.name = n.name;
         this.port = n.port;
 
         if(null==httpServer){
-            var expressApp = setupExpressApp();
-            httpServer = http.createServer(expressApp);
+            httpServer = http.createServer(appExpress);
             httpServer.listen(this.port);
 
         }else{
             httpServer.close(function(){
-                var expressApp = setupExpressApp();
-                httpServer = http.createServer(expressApp);
+                httpServer = http.createServer(appExpress);
                 httpServer.listen(this.port);
             }.bind(this));
         }
@@ -86,35 +97,22 @@ module.exports = function(RED) {
 
     function GoogleActionDialogflowIn_http(n) {
         RED.nodes.createNode(this,n);
+
         this.intent=n.intent;
-        inputNodes.push(this);
-
-        //Validate config node
-         var config = RED.nodes.getNode(n.listener);
-
+        this.listener = RED.nodes.getNode(n.listener);
+        outputNodes.push(this);
 
     }
     RED.nodes.registerType("google-action-dialogflow-http in",GoogleActionDialogflowIn_http);
 
-
     function GoogleActionDialogflowOut_http(n) {
         RED.nodes.createNode(this,n);
-        var node = this;
 
         this.on("input",function(msg) {
-
-            switch(msg.responseType){
-                case 'respond':
-                    msg.conv.close(msg.payload);
-                    break;
-
-                case 'ask':
-                    msg.conv.ask(msg.payload);
-                    break;
-            }
-            msg.resolve();
+            msg.resolve(msg);
 
         });
+
     }
     RED.nodes.registerType("google-action-dialogflow-http response",GoogleActionDialogflowOut_http);
 }
