@@ -34,7 +34,7 @@ module.exports = function(RED) {
             msg.responseType = "respond";
             const matchedNode = outputNodes.filter(oN => oN.intent===conv.intent);
             if (!matchedNode.length){
-                msg.payload=`L'intent [${conv.intent}] n'est pas pris en charge`;
+                msg.payload=`Intent [${conv.intent}] is not supported`;
                 resolve(msg);
             }else{
                 msg.payload = "";
