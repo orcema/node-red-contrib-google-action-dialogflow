@@ -84,13 +84,13 @@ module.exports = function(RED) {
         if(null==httpServer){
             console.log(`starting server [${this.name}] on port [${this.port}]`);
             httpServer = http.createServer(appExpress);
-            httpServer.listen(this.port);
+            httpServer.listen(this.port,'0.0.0.0');
 
         }else{
             console.log(`re-starting server [${this.name}] on port [${this.port}]`);
             httpServer.close(function(){
                 httpServer = http.createServer(appExpress);
-                httpServer.listen(this.port);
+                httpServer.listen(this.port,'0.0.0.0');
             }.bind(this));
         }
      
