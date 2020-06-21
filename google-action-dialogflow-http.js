@@ -79,12 +79,15 @@ module.exports = function(RED) {
         outputNodes=[];
         this.name = n.name;
         this.port = n.port;
+        console.log(`config-updated for [${this.name}] - applying to server`);
 
         if(null==httpServer){
+            console.log(`starting server [${this.name}] on port [${this.port}]`);
             httpServer = http.createServer(appExpress);
             httpServer.listen(this.port);
 
         }else{
+            console.log(`re-starting server [${this.name}] on port [${this.port}]`);
             httpServer.close(function(){
                 httpServer = http.createServer(appExpress);
                 httpServer.listen(this.port);
