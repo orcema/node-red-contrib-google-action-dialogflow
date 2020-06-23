@@ -1,3 +1,7 @@
+version:0.7.0
+	- using dependencies jsonata and natural to define conversation parameters in plural and singular form.
+	  They can be found on 'msg.parameters.plural' and 'msg.parameters.singular'
+
 version:0.6.2:
 	- fix unresolved promise
 

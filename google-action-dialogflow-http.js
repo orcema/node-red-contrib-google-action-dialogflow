@@ -23,6 +23,7 @@ module.exports = function(RED) {
     const bodyParser = require('body-parser');
     const natural = require('natural');
     const nounInflector = new natural.NounInflector();
+    const jsonata = require("jsonata");
     
     const {
         dialogflow,
@@ -33,11 +34,12 @@ module.exports = function(RED) {
     var httpServer=null;
     
     const InputNodeHasProcessed = (conv) => {
-        console.log(conv.parameters.item,natural.PorterStemmerFr.stem(conv.parameters.item));
-        console.log(conv.parameters.item,nounInflector.singularize(conv.parameters.item),nounInflector.pluralize(conv.parameters.item))
+        let msg={};
+        setConvParamsInSingularAndPlural(msg,conv);
 
         return new Promise((resolve,reject)=>{
-            let msg={};
+            
+
             if(msg.responseType===undefined){
                 msg.responseType = "respond";
 
@@ -139,7 +141,21 @@ module.exports = function(RED) {
         appExpress.use(bodyParser.json({ type: 'application/json' }));
         appExpress.use(appDialogflow);
 
- 
+
+    function setConvParamsInSingularAndPlural(msg, conv) {
+        msg.parameters = {};
+        msg.parameters.singular = {};
+        msg.parameters.plural = {};
+        const arrayParamsKey = jsonata("$keys(parameters)").evaluate(conv);
+        const arrayParamsValue = arrayParamsKey.map(key => jsonata("$lookup(parameters,'" + key + "')").evaluate(conv));
+        const arrayParamsValueSingular = arrayParamsValue.map(value => nounInflector.singularize(value));
+        const arrayParamsValuePlural = arrayParamsValueSingular.map(value => nounInflector.pluralize(value));
+    
+        for (let itr = 0; itr < arrayParamsKey.length; itr++) {
+            msg.parameters.singular[arrayParamsKey[itr]] = arrayParamsValueSingular[itr];
+            msg.parameters.plural[arrayParamsKey[itr]] = arrayParamsValuePlural[itr];
+        }
+    }
        
     function DialogFlowListenerConfig(n){
         RED.nodes.createNode(this,n);
@@ -187,3 +203,5 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("google-action-dialogflow-http response",GoogleActionDialogflowOut_http);
 }
+
+
