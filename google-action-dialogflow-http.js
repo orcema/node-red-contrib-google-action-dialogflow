@@ -97,7 +97,7 @@ module.exports = function(RED) {
         });
         appDialogflow.catch((conv, error) => {
             console.error(error);
-            conv.ask('I encountered a glitch. Can you say that again?');
+            conv.close("Une erreur s'est produite, veuillez svp reessayer plus tard");
         });
         
         // appDialogflow.intent('Permission', (conv) => {
@@ -148,8 +148,8 @@ module.exports = function(RED) {
         msg.parameters.plural = {};
         const arrayParamsKey = jsonata("$keys(parameters)").evaluate(conv);
         const arrayParamsValue = arrayParamsKey.map(key => jsonata("$lookup(parameters,'" + key + "')").evaluate(conv));
-        const arrayParamsValueSingular = arrayParamsValue.map(value => nounInflector.singularize(value));
-        const arrayParamsValuePlural = arrayParamsValueSingular.map(value => nounInflector.pluralize(value));
+        const arrayParamsValueSingular = arrayParamsValue.map(value => value.length>0?nounInflector.singularize(value):"");
+        const arrayParamsValuePlural = arrayParamsValueSingular.map(value => value.length>0?nounInflector.pluralize(value):"");
     
         for (let itr = 0; itr < arrayParamsKey.length; itr++) {
             msg.parameters.singular[arrayParamsKey[itr]] = arrayParamsValueSingular[itr];

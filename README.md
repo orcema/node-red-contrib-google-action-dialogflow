@@ -1,12 +1,10 @@
+version:0.7.1
+	- fix: avoid 'msg.parameters.plural' and 'msg.parameters.singular' on empty content
+
 version:0.7.0
 	- using dependencies jsonata and natural to define conversation parameters in plural and singular form.
 	  They can be found on 'msg.parameters.plural' and 'msg.parameters.singular'
 
-version:0.6.2:
-	- fix unresolved promise
-
-version:0.6.1
-	- fix: filenames
 	
 version:0.6.0
 	- dependency update "actions-on-google": "^2.12.0"
