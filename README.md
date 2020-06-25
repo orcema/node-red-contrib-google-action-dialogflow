@@ -1,5 +1,5 @@
-version:0.7.1
-	- fix: avoid 'msg.parameters.plural' and 'msg.parameters.singular' on empty content
+version:0.7.2
+	- fix: do not setup 'msg.parameters.plural' and 'msg.parameters.singular' on empty parameter item or if parameters missing.
 
 version:0.7.0
 	- using dependencies jsonata and natural to define conversation parameters in plural and singular form.

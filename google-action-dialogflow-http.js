@@ -147,6 +147,8 @@ module.exports = function(RED) {
         msg.parameters.singular = {};
         msg.parameters.plural = {};
         const arrayParamsKey = jsonata("$keys(parameters)").evaluate(conv);
+        if (arrayParamsKey===undefined) return;
+        
         const arrayParamsValue = arrayParamsKey.map(key => jsonata("$lookup(parameters,'" + key + "')").evaluate(conv));
         const arrayParamsValueSingular = arrayParamsValue.map(value => value.length>0?nounInflector.singularize(value):"");
         const arrayParamsValuePlural = arrayParamsValueSingular.map(value => value.length>0?nounInflector.pluralize(value):"");
