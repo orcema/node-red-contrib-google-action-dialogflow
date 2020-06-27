@@ -143,19 +143,23 @@ module.exports = function(RED) {
 
 
     function setConvParamsInSingularAndPlural(msg, conv) {
-        msg.parameters = {};
-        msg.parameters.singular = {};
-        msg.parameters.plural = {};
-        const arrayParamsKey = jsonata("$keys(parameters)").evaluate(conv);
-        if (arrayParamsKey===undefined) return;
+        try {
+            msg.parameters = {};
+            msg.parameters.singular = {};
+            msg.parameters.plural = {};
+            const arrayParamsKey = jsonata("$keys(parameters)").evaluate(conv);
+            if (arrayParamsKey===undefined) return;
+            
+            const arrayParamsValue = arrayParamsKey.map(key => jsonata("$lookup(parameters,'" + key + "')").evaluate(conv));
+            const arrayParamsValueSingular = arrayParamsValue.map(value => value.length>0?nounInflector.singularize(value):"");
+            const arrayParamsValuePlural = arrayParamsValueSingular.map(value => value.length>0?nounInflector.pluralize(value):"");
         
-        const arrayParamsValue = arrayParamsKey.map(key => jsonata("$lookup(parameters,'" + key + "')").evaluate(conv));
-        const arrayParamsValueSingular = arrayParamsValue.map(value => value.length>0?nounInflector.singularize(value):"");
-        const arrayParamsValuePlural = arrayParamsValueSingular.map(value => value.length>0?nounInflector.pluralize(value):"");
-    
-        for (let itr = 0; itr < arrayParamsKey.length; itr++) {
-            msg.parameters.singular[arrayParamsKey[itr]] = arrayParamsValueSingular[itr];
-            msg.parameters.plural[arrayParamsKey[itr]] = arrayParamsValuePlural[itr];
+            for (let itr = 0; itr < arrayParamsKey.length; itr++) {
+                msg.parameters.singular[arrayParamsKey[itr]] = arrayParamsValueSingular[itr];
+                msg.parameters.plural[arrayParamsKey[itr]] = arrayParamsValuePlural[itr];
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
        

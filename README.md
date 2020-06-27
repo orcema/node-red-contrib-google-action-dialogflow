@@ -1,4 +1,4 @@
-version:0.7.2
+version:0.7.3
 	- fix: do not setup 'msg.parameters.plural' and 'msg.parameters.singular' on empty parameter item or if parameters missing.
 
 version:0.7.0
